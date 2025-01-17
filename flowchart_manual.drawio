@@ -4,52 +4,94 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-12" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shadow=0;dashed=0;strokeWidth=1;shape=mxgraph.ios.iBgFlat;strokeColor=#18211b;" vertex="1" parent="1">
+          <mxGeometry x="360" y="120" width="250" height="1160" as="geometry" />
+        </mxCell>
         <mxCell id="k1oNWI9TpoiNpdp1JPCH-2" value="FLOWCHART YANG TERJADI TANPA APLIKASI / MANUAL" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="145" y="15" width="560" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-10" value="" style="group" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="110" y="120" width="250" height="430" as="geometry" />
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-9" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shadow=0;dashed=0;strokeWidth=1;shape=mxgraph.ios.iBgFlat;strokeColor=#18211b;" vertex="1" parent="1">
+          <mxGeometry x="110" y="120" width="250" height="1160" as="geometry" />
         </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-9" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shadow=0;dashed=0;strokeWidth=1;shape=mxgraph.ios.iBgFlat;strokeColor=#18211b;" vertex="1" parent="k1oNWI9TpoiNpdp1JPCH-10">
-          <mxGeometry width="250" height="430" as="geometry" />
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-1" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;mulai&lt;/font&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="150" y="190" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-1" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;mulai&lt;/font&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.terminator;whiteSpace=wrap;" vertex="1" parent="k1oNWI9TpoiNpdp1JPCH-10">
-          <mxGeometry x="40" y="70" width="150" height="60" as="geometry" />
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-3" value="ADMIN" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="180" y="130" width="90" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-3" value="ADMIN" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=1" vertex="1" parent="k1oNWI9TpoiNpdp1JPCH-10">
-          <mxGeometry x="70" y="10" width="90" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="k1oNWI9TpoiNpdp1JPCH-10" source="k1oNWI9TpoiNpdp1JPCH-4" target="k1oNWI9TpoiNpdp1JPCH-6">
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-4" target="k1oNWI9TpoiNpdp1JPCH-6">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-4" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Pencatatan Produk&lt;/font&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.document2;whiteSpace=wrap;size=0.25;" vertex="1" parent="k1oNWI9TpoiNpdp1JPCH-10">
-          <mxGeometry x="42.5" y="190" width="145" height="70" as="geometry" />
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-4" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Pencatatan Produk&lt;/font&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.document2;whiteSpace=wrap;size=0.25;" vertex="1" parent="1">
+          <mxGeometry x="152.5" y="310" width="145" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="k1oNWI9TpoiNpdp1JPCH-10" source="k1oNWI9TpoiNpdp1JPCH-1" target="k1oNWI9TpoiNpdp1JPCH-4">
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-1" target="k1oNWI9TpoiNpdp1JPCH-4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-6" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Data Poduk&lt;/font&gt;" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" vertex="1" parent="k1oNWI9TpoiNpdp1JPCH-10">
-          <mxGeometry x="30" y="300" width="170" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-29" value="" style="group" vertex="1" connectable="0" parent="1">
-          <mxGeometry x="480" y="120" width="250" height="560" as="geometry" />
-        </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-12" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shadow=0;dashed=0;strokeWidth=1;shape=mxgraph.ios.iBgFlat;strokeColor=#18211b;" vertex="1" parent="k1oNWI9TpoiNpdp1JPCH-29">
-          <mxGeometry width="250" height="560" as="geometry" />
-        </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-14" value="USER" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=1" vertex="1" parent="k1oNWI9TpoiNpdp1JPCH-29">
-          <mxGeometry x="75" y="10" width="80" height="40" as="geometry" />
-        </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-23" value="&lt;font&gt;Melihat Data Produk&lt;/font&gt;&lt;div&gt;&lt;font&gt;dan&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Melakukan Peminjaman&lt;/span&gt;&lt;/div&gt;" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;size=0.23;arcSize=10;flipV=1;labelPosition=center;align=center;fontSize=18;" vertex="1" parent="k1oNWI9TpoiNpdp1JPCH-29">
-          <mxGeometry x="30" y="290" width="190" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-25" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Mengisi Peminjaman&lt;/font&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.document2;whiteSpace=wrap;size=0.25;" vertex="1" parent="k1oNWI9TpoiNpdp1JPCH-29">
-          <mxGeometry x="65" y="420" width="135" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.444;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="k1oNWI9TpoiNpdp1JPCH-29" source="k1oNWI9TpoiNpdp1JPCH-23" target="k1oNWI9TpoiNpdp1JPCH-25">
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-6" target="k1oNWI9TpoiNpdp1JPCH-23">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="k1oNWI9TpoiNpdp1JPCH-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-6" target="k1oNWI9TpoiNpdp1JPCH-23">
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-6" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Data Poduk&lt;/font&gt;" style="shape=parallelogram;html=1;strokeWidth=2;perimeter=parallelogramPerimeter;whiteSpace=wrap;rounded=1;arcSize=12;size=0.23;" vertex="1" parent="1">
+          <mxGeometry x="140" y="420" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-14" value="USER" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="435" y="130" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-23" value="&lt;font&gt;Melihat Data Produk&lt;/font&gt;&lt;div&gt;&lt;font&gt;dan&amp;nbsp;&lt;/font&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Melakukan Peminjaman&lt;/span&gt;&lt;/div&gt;" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;size=0.23;arcSize=10;flipV=1;labelPosition=center;align=center;fontSize=18;" vertex="1" parent="1">
+          <mxGeometry x="390" y="410" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-25" target="k1oNWI9TpoiNpdp1JPCH-33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-25" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Mengisi Peminjaman&lt;/font&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.document2;whiteSpace=wrap;size=0.25;" vertex="1" parent="1">
+          <mxGeometry x="418" y="535" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.444;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-23" target="k1oNWI9TpoiNpdp1JPCH-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-33" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Pengecekan dan&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;disetujui&lt;/font&gt;&lt;/div&gt;" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;size=0.23;arcSize=10;flipV=1;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="139.38" y="540" width="191.25" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-38" target="k1oNWI9TpoiNpdp1JPCH-40">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-38" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;Pengambilan&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 18px;&quot;&gt;produk&lt;/span&gt;&lt;/div&gt;" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;size=0.23;arcSize=10;flipV=1;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="379.38" y="655" width="191.25" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-40" target="k1oNWI9TpoiNpdp1JPCH-42">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-40" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;Mengembalikan&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 18px;&quot;&gt;Produk&lt;/span&gt;&lt;/div&gt;" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;size=0.23;arcSize=10;flipV=1;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="379.38" y="770" width="191.25" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-42" target="k1oNWI9TpoiNpdp1JPCH-47">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-42" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Mengisi&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Pengembalian&lt;/font&gt;&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.document2;whiteSpace=wrap;size=0.25;" vertex="1" parent="1">
+          <mxGeometry x="400" y="905" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-44" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;Laporan Peminjaman&lt;/span&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.multi-document;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="160" y="650" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-33" target="k1oNWI9TpoiNpdp1JPCH-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-38" target="k1oNWI9TpoiNpdp1JPCH-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-47" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;Pemeriksaan&lt;/span&gt;" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;size=0.23;arcSize=10;flipV=1;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="139.37" y="910" width="191.25" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-49" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;Laporan Pengembalian&lt;/span&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.multi-document;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="160.01" y="1040" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-47" target="k1oNWI9TpoiNpdp1JPCH-49">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-51" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Selesai&lt;/font&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="162.49" y="1170" width="145" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="k1oNWI9TpoiNpdp1JPCH-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="k1oNWI9TpoiNpdp1JPCH-49" target="k1oNWI9TpoiNpdp1JPCH-51">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
