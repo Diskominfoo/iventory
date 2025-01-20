@@ -311,13 +311,6 @@
         <mxCell id="X5Z6C7hF7MY6zSq2zKzd-131" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="X5Z6C7hF7MY6zSq2zKzd-127" target="X5Z6C7hF7MY6zSq2zKzd-94">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="X5Z6C7hF7MY6zSq2zKzd-132" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="X5Z6C7hF7MY6zSq2zKzd-116">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1742.5" y="1509.996923076923" as="sourcePoint" />
-            <mxPoint x="1745" y="1319.92" as="targetPoint" />
-            <Array as="points" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="X5Z6C7hF7MY6zSq2zKzd-134" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;halaman&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 18px;&quot;&gt;Pengembalian&lt;/span&gt;&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.display;whiteSpace=wrap;" vertex="1" parent="1">
           <mxGeometry x="1595.62" y="1940" width="150" height="70" as="geometry" />
         </mxCell>
@@ -348,19 +341,16 @@
         <mxCell id="X5Z6C7hF7MY6zSq2zKzd-150" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="X5Z6C7hF7MY6zSq2zKzd-90" target="X5Z6C7hF7MY6zSq2zKzd-127">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="X5Z6C7hF7MY6zSq2zKzd-152" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="X5Z6C7hF7MY6zSq2zKzd-97" target="X5Z6C7hF7MY6zSq2zKzd-116">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1743" y="1476" as="sourcePoint" />
-            <mxPoint x="1745" y="1319.92" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="1920" y="1476" />
-              <mxPoint x="1920" y="1325" />
-              <mxPoint x="1745" y="1325" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
         <mxCell id="X5Z6C7hF7MY6zSq2zKzd-116" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Tidak&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="1790" y="1440" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="X5Z6C7hF7MY6zSq2zKzd-153" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="X5Z6C7hF7MY6zSq2zKzd-97" target="X5Z6C7hF7MY6zSq2zKzd-100">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1890" y="1476" />
+              <mxPoint x="1890" y="1325" />
+            </Array>
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
