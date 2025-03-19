@@ -7,7 +7,7 @@
       <img src="/img/logo.png" alt="Logo" class="logo">
       <div class="header">
         <h1>Peminjaman Produk</h1>
-        <router-link to="/formpeminjaman" class="btn">Pinjam</router-link>
+        <router-link to="/forpin" class="btn">Pinjam</router-link>
       </div>
 
       <div class="table-container">

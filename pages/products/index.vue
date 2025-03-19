@@ -26,7 +26,7 @@
                 <th>Tanggal</th>
                 <th>Nama</th>
                 <th>Kategori</th>
-                <th>Spesifikasi</th>
+                <th>description</th>
                 <th>Kondisi Alat</th>
                 <th>Jenis</th>
                 <th>Tahun</th>
@@ -40,7 +40,7 @@
                 <td>{{ product.tanggal }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.kategori }}</td>
-                <td>{{ product.spesifikasi }}</td>
+                <td>{{ product.description }}</td>
                 <td>{{ product.kondisi }}</td>
                 <td>{{ product.jenis }}</td>
                 <td>{{ product.tahun }}</td>
@@ -59,6 +59,10 @@
 </template>
 
 <script setup>
+
+definePageMeta({
+    middleware:'auth'
+})
 
 const supabase = useSupabaseClient();
 const router = useRouter();

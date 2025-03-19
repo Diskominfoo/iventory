@@ -9,7 +9,7 @@
         <div class="header">
           <h1>Tambah Alat</h1>
         </div>
-
+        <!-- <h1>{{ form.description }}</h1> -->
         <div class="form-container">
           <h2>Formulir Tambah Alat</h2>
 
@@ -35,8 +35,8 @@
             </div>
 
             <div class="form-group">
-              <label for="specification">Spesifikasi</label>
-              <input v-model="form.spesifikasi" type="text" id="specification" placeholder="Masukkan Spesifikasi Alat" required />
+              <label for="specification">description</label>
+              <input v-model="form.description" type="text" id="description" placeholder="Masukkan description Alat" required />
             </div>
 
             <div class="form-group">
@@ -83,7 +83,7 @@ const router = useRouter();
 const form = ref({
   name: "",
   kategori: "",
-  spesifikasi: "",
+  description: "",
   kondisi: "",
   jenis: "",
   tahun: "",
@@ -115,63 +115,73 @@ const showNotification = (message, type = 'success') => {
 
 // Fungsi untuk mengirimkan data ke Supabase
 const kirimData = async () => {
-  if (loading.value) return;
+//   if (loading.value) return;
 
-  try {
-    loading.value = true;
+//   try {
+//     loading.value = true;
 
-    // Format tanggal hari ini
-    const tanggalHariIni = new Date().toISOString().split('T')[0];
+//     // Format tanggal hari ini
+//     const tanggalHariIni = new Date().toISOString().split('T')[0];
 
-    // Kirim data ke Supabase
-    const { data, error } = await supabase
-      .from('products')
-      .insert([{
-        name: form.value.name,
-        kategori: form.value.kategori,
-        spesifikasi: form.value.spesifikasi,
-        kondisi: form.value.kondisi,
-        jenis: form.value.jenis,
-        tahun: form.value.tahun,
-        jumlah: form.value.jumlah,
-        tanggal: tanggalHariIni
-      }])
-      .select();
+//     // Kirim data ke Supabase
+//     const { data, error } = await supabase
+//       .from('products')
+//       .insert([{
+//         name: form.value.name,
+//         kategori: form.value.kategori,
+//         spesifikasi: form.value.spesifikasi,
+//         kondisi: form.value.kondisi,
+//         jenis: form.value.jenis,
+//         tahun: form.value.tahun,
+//         jumlah: form.value.jumlah,
+//         tanggal: tanggalHariIni
+//       }])
+//       .select();
 
-    if (error) {
-      console.error('Error inserting data:', error);
-      showNotification('Terjadi kesalahan saat menambah alat', 'error');
-      return;
-    }
+//     if (error) {
+//       console.error('Error inserting data:', error);
+//       showNotification('Terjadi kesalahan saat menambah alat', 'error');
+//       return;
+//     }
 
-    console.log('Data berhasil disimpan:', data);
+//     console.log('Data berhasil disimpan:', data);
 
-    // Tampilkan notifikasi sukses
-    showNotification('Alat berhasil ditambahkan');
+//     // Tampilkan notifikasi sukses
+//     showNotification('Alat berhasil ditambahkan');
 
-    // Reset form setelah sukses
-    form.value = {
-      name: "",
-      kategori: "",
-      spesifikasi: "",
-      kondisi: "",
-      jenis: "",
-      tahun: "",
-      jumlah: ""
-    };
+//     // Reset form setelah sukses
+//     form.value = {
+//       name: "",
+//       kategori: "",
+//       spesifikasi: "",
+//       kondisi: "",
+//       jenis: "",
+//       tahun: "",
+//       jumlah: ""
+//     };
 
-    // Redirect ke halaman products setelah 1.5 detik
-    setTimeout(() => {
-      router.push('/products');
-    }, 1500);
+//     // Redirect ke halaman products setelah 1.5 detik
+//     setTimeout(() => {
+//       router.push('/products');
+//     }, 1500);
 
-  } catch (err) {
-    console.error('Unexpected error:', err);
-    showNotification('Terjadi kesalahan yang tidak terduga', 'error');
-  } finally {
+//   } catch (err) {
+//     console.error('Unexpected error:', err);
+//     showNotification('Terjadi kesalahan yang tidak terduga', 'error');
+//   } finally {
+//     loading.value = false;
+//   }
+  loading.value = true;
+  const { data, error } = await supabase
+    .from("products")
+    .insert([form.value])
+    .select()
+  if(data) {
     loading.value = false;
+    navigateTo('/products')
   }
-};
+  console.log(form.value)
+}
 </script>
 
 <style scoped>

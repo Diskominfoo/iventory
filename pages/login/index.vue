@@ -5,14 +5,14 @@
           <img src="/img/logo.png" alt="Logo" class="logo" />
         </div>
         <h2>Login</h2>
-        <form action="#" method="POST">
+        <form @submit.prevent="handleLogin">
           <div class="input-group">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required />
+            <input v-model="email" type="text" id="username" name="username" required />
           </div>
           <div class="input-group">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required />
+            <input v-model="password" type="password" id="password" name="password" required />
           </div>
           <button type="submit">Login</button>
         </form>
@@ -20,6 +20,59 @@
     </div>
   </template>
   
+  <script setup>
+definePageMeta({
+  layout: 'login',
+})
+
+const client = useSupabaseClient()
+const email = ref("")
+const password = ref("")
+const isPasswordVisible = ref(false)
+const errorMessage = ref("")  // Store error message
+
+// Function to handle login
+async function handleLogin() {
+  const { data, error } = await client.auth.signInWithPassword({
+    email: email.value,
+    password: password.value,
+  })
+
+  if (error) {
+    if (error.message.includes("invalid email")) {
+      errorMessage.value = "Email yang anda masukkan salah"
+    } else if (error.message.includes("incorrect password")) {
+      errorMessage.value = "Password yang anda masukkan salah"
+    } else {
+      errorMessage.value = "Periksa lebih teliti !!!"
+    }
+    setTimeout(() => {
+      errorMessage.value = ""
+    }, 1000)
+    return
+  }
+
+  if (data) {
+    getProfileRole(data.user.id)
+  }
+}
+
+async function getProfileRole(id) {
+  const { data, error } = await client
+    .from('profile')
+    .select('role')
+    .eq('id', id)
+    .single()
+  if (data) {
+    if (data.role == 'admin') navigateTo('/dashboard')
+    else navigateTo('/peminjamanuser')
+  }
+}
+
+function togglePasswordVisibility() {
+  isPasswordVisible.value = !isPasswordVisible.value
+}
+</script>
   <style scoped>
   /* Mengatur seluruh halaman agar selalu penuh */
   * {

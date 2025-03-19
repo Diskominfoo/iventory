@@ -7,6 +7,6 @@ export default defineNuxtConfig({
     "bootstrap-icons/font/bootstrap-icons.min.css"
   ],
 
-    modules: ["@nuxtjs/supabase"],
-    supabase: { redirect: false },
+  modules: ["@nuxtjs/supabase"],
+  supabase: { redirect: false },
 })
