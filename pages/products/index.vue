@@ -11,12 +11,12 @@
         </div>
 
         <div class="my-3">
-          <form @submit.prevent="getData">
+          <form @submit.prevent="getProducts">
             <input v-model="keyword" type="search" class="form-control rounded-5" placeholder="Cari nama produk...">
           </form>
         </div>
 
-        <div class="my-3 text-muted">menampilkan {{ data?.length }} dari {{ Totalproducts }}</div>
+        <div class="my-3 text-muted">menampilkan {{ products.length }} dari {{ totalProducts }}</div>
 
         <div class="table-container">
           <table>
@@ -24,28 +24,30 @@
               <tr>
                 <th>NO.</th>
                 <th>Tanggal</th>
-                <th>Kategori</th>
                 <th>Nama</th>
+                <th>Kategori</th>
                 <th>Spesifikasi</th>
                 <th>Kondisi Alat</th>
                 <th>Jenis</th>
                 <th>Tahun</th>
+                <th>Jumlah</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(product, i) in products" :key="i">
+              <tr v-for="(product, i) in products" :key="product.id">
                 <td>{{ i + 1 }}.</td>
                 <td>{{ product.tanggal }}</td>
-                <td>{{ product.kategori }}</td>
                 <td>{{ product.name }}</td>
+                <td>{{ product.kategori }}</td>
                 <td>{{ product.spesifikasi }}</td>
                 <td>{{ product.kondisi }}</td>
                 <td>{{ product.jenis }}</td>
                 <td>{{ product.tahun }}</td>
+                <td>{{ product.jumlah }}</td>
                 <td>
-                  <button @click="editProduct(product)">Edit</button>
-                  <button @click="deleteProduct(product.id)">Delete</button>
+                  <button class="action-btn" @click="editProduct(product)">Edit</button>
+                  <button class="action-btn delete-btn" @click="deleteProduct(product.id)">Delete</button>
                 </td>
               </tr>
             </tbody>
@@ -57,34 +59,54 @@
 </template>
 
 <script setup>
-const supabase = useSupabaseClient()
-const keyword = ref('')
-const products = ref([])
-const Totalproducts = ref(0)
+
+const supabase = useSupabaseClient();
+const router = useRouter();
+const keyword = ref('');
+const products = ref([]);
+const totalProducts = ref(0);
 
 const getProducts = async () => {
-  const { data, error } = await supabase.from('products').select('*').ilike('name', `%${keyword.value}%`)
+  const { data, error } = await supabase.from('products').select('*').ilike('name', `%${keyword.value}%`);
   if (error) {
-    console.error('Error fetching products:', error)
+    console.error('Error fetching products:', error);
   } else {
-    products.value = data
+    products.value = data;
   }
-}
+};
 
 const getTotalProducts = async () => {
-  const { count, error } = await supabase.from('products').select('*', { count: 'exact', head: true })
+  const { count, error } = await supabase.from('products').select('*', { count: 'exact', head: true });
   if (error) {
-    console.error('Error fetching total products:', error)
+    console.error('Error fetching total products:', error);
   } else {
-    Totalproducts.value = count
+    totalProducts.value = count;
   }
-}
+};
+
+const editProduct = (product) => {
+  router.push(`/alat/edit/${product.id}`);
+};
+
+const deleteProduct = async (id) => {
+  if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (error) {
+      console.error('Error deleting product:', error);
+      alert('Gagal menghapus produk');
+    } else {
+      getProducts();
+      getTotalProducts();
+    }
+  }
+};
 
 onMounted(() => {
-  getProducts()
-  getTotalProducts()
-})
+  getProducts();
+  getTotalProducts();
+});
 </script>
+
 <style scoped>
 * {
   margin: 0;
@@ -102,7 +124,6 @@ onMounted(() => {
 
 .content-main {
   margin-left: 250px;
-  /* Memberikan ruang untuk sidebar (menu) */
   padding: 30px;
   width: 100%;
   height: 98vh;
@@ -171,9 +192,9 @@ table tr:nth-child(even) {
   color: white;
   padding: 5px 10px;
   border-radius: 4px;
-  text-decoration: none;
+  border: none;
   cursor: pointer;
-  margin-left: 10px;
+  margin-right: 5px;
 }
 
 .delete-btn {
@@ -186,10 +207,25 @@ table tr:nth-child(even) {
   display: block;
   margin: 20px auto;
 }
+
 .form-control {
-  font-size: 1.25rem;  /* Ukuran font lebih besar */
-  padding: 0.75rem 1rem;  /* Lebih banyak ruang di dalam input */
-  border-radius: 0.5rem;  /* Membuat sudut input lebih besar */
-  height: 50px;  /* Menambah tinggi input */
+  font-size: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  height: 50px;
+  width: 100%;
+}
+
+.my-3 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+.rounded-5 {
+  border-radius: 0.5rem;
 }
 </style>

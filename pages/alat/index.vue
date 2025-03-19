@@ -56,6 +56,11 @@
               <label for="year">Tahun</label>
               <input v-model="form.tahun" type="number" id="year" placeholder="Masukkan Tahun Alat" required />
             </div>
+            
+            <div class="form-group">
+              <label for="jumlah">Jumlah</label>
+              <input v-model="form.jumlah" type="number" id="jumlah" placeholder="Masukkan jumlah Alat" required />
+            </div>
 
             <div class="form-group">
               <button type="submit" :disabled="loading">
@@ -71,8 +76,8 @@
 
 <script setup>
 
-const supabase = useSupabaseClient()
-const router = useRouter()
+const supabase = useSupabaseClient();
+const router = useRouter();
 
 // Form data
 const form = ref({
@@ -81,18 +86,19 @@ const form = ref({
   spesifikasi: "",
   kondisi: "",
   jenis: "",
-  tahun: ""
-})
+  tahun: "",
+  jumlah: ""
+});
 
 // Status loading
-const loading = ref(false)
+const loading = ref(false);
 
 // Notifikasi
 const notif = ref({
   show: false,
   message: '',
   type: 'success'
-})
+});
 
 // Fungsi untuk menampilkan notifikasi
 const showNotification = (message, type = 'success') => {
@@ -100,61 +106,72 @@ const showNotification = (message, type = 'success') => {
     show: true,
     message,
     type
-  }
-  
-  // Sembunyikan notifikasi setelah 3 detik
+  };
+
   setTimeout(() => {
-    notif.value.show = false
-  }, 3000)
-}
+    notif.value.show = false;
+  }, 3000);
+};
 
 // Fungsi untuk mengirimkan data ke Supabase
 const kirimData = async () => {
-  if (loading.value) return
-  
+  if (loading.value) return;
+
   try {
-    loading.value = true
-    
+    loading.value = true;
+
+    // Format tanggal hari ini
+    const tanggalHariIni = new Date().toISOString().split('T')[0];
+
     // Kirim data ke Supabase
     const { data, error } = await supabase
       .from('products')
-      .insert([form.value])
-      .select()
-    
+      .insert([{
+        name: form.value.name,
+        kategori: form.value.kategori,
+        spesifikasi: form.value.spesifikasi,
+        kondisi: form.value.kondisi,
+        jenis: form.value.jenis,
+        tahun: form.value.tahun,
+        jumlah: form.value.jumlah,
+        tanggal: tanggalHariIni
+      }])
+      .select();
+
     if (error) {
-      console.error('Error inserting data:', error)
-      showNotification('Terjadi kesalahan saat menambah alat', 'error')
-      return
+      console.error('Error inserting data:', error);
+      showNotification('Terjadi kesalahan saat menambah alat', 'error');
+      return;
     }
-    
-    console.log('Data berhasil disimpan:', data)
-    
+
+    console.log('Data berhasil disimpan:', data);
+
     // Tampilkan notifikasi sukses
-    showNotification('Alat berhasil ditambahkan')
-    
-    // Tunggu sebentar untuk notifikasi terlihat
+    showNotification('Alat berhasil ditambahkan');
+
+    // Reset form setelah sukses
+    form.value = {
+      name: "",
+      kategori: "",
+      spesifikasi: "",
+      kondisi: "",
+      jenis: "",
+      tahun: "",
+      jumlah: ""
+    };
+
+    // Redirect ke halaman products setelah 1.5 detik
     setTimeout(() => {
-      // Reset form setelah berhasil
-      form.value = {
-        name: "",
-        kategori: "",
-        spesifikasi: "",
-        kondisi: "",
-        jenis: "",
-        tahun: ""
-      }
-      
-      // Navigasi ke halaman products
-      router.push('/products')
-    }, 1500)
-    
+      router.push('/products');
+    }, 1500);
+
   } catch (err) {
-    console.error('Unexpected error:', err)
-    showNotification('Terjadi kesalahan yang tidak terduga', 'error')
+    console.error('Unexpected error:', err);
+    showNotification('Terjadi kesalahan yang tidak terduga', 'error');
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 </script>
 
 <style scoped>
