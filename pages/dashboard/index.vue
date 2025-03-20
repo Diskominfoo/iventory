@@ -10,14 +10,14 @@
   
         <!-- Stats Section -->
         <div class="stats">
-          <div class="stat-card">
-            <h2>Total Produk</h2>
-            <p>120</p>
-          </div>
-          <div class="stat-card">
+          <nuxt-link to="/products"><div class="stat-card">
+            <h2>Total Product</h2>
+            <p>{{ jmlah_product }}</p>
+          </div></nuxt-link>
+          <nuxt-link to="/peminjaman"><div class="stat-card">
             <h2>Dipinjam</h2>
-            <p>5</p>
-          </div>
+            <p>{{ jmlah_Dipinjam }}</p>
+          </div></nuxt-link>
           <div class="stat-card">
             <h2>Pengembalian</h2>
             <p>5</p>
@@ -27,6 +27,35 @@
     </div>
   </template>
   
+  <script setup>
+    definePageMeta({
+    middleware:'auth'
+  })
+
+const supabase = useSupabaseClient()
+const jmlah_product = ref(0)
+const jmlah_Dipinjam = ref(0)
+
+async function getjmlah_product(){
+  const{error, data, count} = await supabase
+  .from("products")
+  .select('*', {count: 'exact'})
+  if (count) jmlah_product.value = count
+}
+
+async function getjmlah_Dipinjam(){
+  const{error, data, count} = await supabase
+  .from("peminjaman")
+  .select('*', {count: 'exact'})
+  if (count) jmlah_Dipinjam.value = count
+}
+
+onMounted(() => {
+  getjmlah_product()
+  getjmlah_Dipinjam()
+})
+  </script>
+  
   <style scoped>
   /* Reset default styles */
   * {
@@ -34,7 +63,10 @@
     padding: 0;
     box-sizing: border-box;
   }
-  
+  a{
+    text-decoration: none;
+    color: white;
+  }
   /* Layout */
   .dashboard {
     display: flex;
@@ -43,11 +75,10 @@
   
   /* Content */
   .content {
-    margin-left: 250px; /* To prevent content overlap with sidebar */
+    margin-left: 250px; 
     padding: 30px;
     width: 100%;
-    min-height: 98vh;
-    background-color: #F4F4F4; /* Abu Muda */
+    min-height: 100vh;
     overflow: hidden; /* Prevent overflow */
   }
   

@@ -75,7 +75,9 @@
 </template>
 
 <script setup>
-
+definePageMeta({
+    middleware:'auth'
+})
 const supabase = useSupabaseClient();
 const router = useRouter();
 
@@ -203,7 +205,7 @@ const kirimData = async () => {
   margin-left: 250px;
   padding: 30px;
   width: 100%;
-  height: 98vh;
+  height: 100vh;
   background-color: #F4F4F4;
 }
 

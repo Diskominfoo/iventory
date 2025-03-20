@@ -6,7 +6,7 @@
         <li><router-link to="/products">products</router-link></li>
         <li><router-link to="/peminjaman">Peminjaman</router-link></li>
         <li><router-link to="/pengembalian">Pengembalian</router-link></li>
-        <li><router-link to="/login" class="btn">Logout</router-link></li>
+        <li><router-link to="/logout" class="btn">Logout</router-link></li>
       </ul>
     </div>
   </template>

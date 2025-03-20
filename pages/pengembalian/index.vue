@@ -6,37 +6,41 @@
         <img src="/img/logo.png" alt="Logo" class="logo" />
         <div class="header">
           <h1>Pengembalian Produk</h1>
-          <a href="formkembalian.html" class="btn">Mengembalikan</a>
+          <a href="forpeng" class="btn">Mengembalikan</a>
         </div>
+        <div class="my-3">
+          <form @submit.prevent="getpengembalian">
+            <input v-model="keyword" type="search" class="form-control rounded-5" placeholder="Cari nama ..." />
+          </form>
+        </div>
+
+        <div class="my-3 text-muted">Menampilkan {{ pengembalian.length }} dari {{ totalpengembalian }}</div>
         <div class="table-container">
           <h2>Daftar Pengembalian</h2>
+          <br />
           <table>
             <thead>
               <tr>
-                <th>No</th>
+                <th>NO.</th>
+                <th>Tanggal Pinjam</th>
                 <th>Nama</th>
-                <th>Barang</th>
-                <th>Tanggal Dikembalikan</th>
+                <th>Produk</th>
+                <th>Jumlah</th>
+                <th>Keperluan</th>
                 <th>Status</th>
-                <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Bela Nurseha</td>
-                <td>Laptop</td>
-                <td>02-02-2025</td>
-                <td class="status-dipinjam">Belum Dikembalikan</td>
-                <td><button class="confirm-btn">Konfirmasi</button></td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Tita Puspita Sari</td>
-                <td>Proyektor</td>
-                <td>01-02-2025</td>
-                <td class="status-terlambat">Belum Dikembalikan</td>
-                <td><button class="confirm-btn">Konfirmasi</button></td>
+              <tr v-for="(item, i) in peminjaman" :key="item.id">
+                <td>{{ i + 1 }}.</td>
+                <td>{{ item.tanggal_pinjam }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.products_id }}</td>
+                <td>{{ item.jumlah }}</td>
+                <td>{{ item.keperluan }}</td>
+                <td :class="{'status-dipinjam': item.status === 'Dipinjam', 'status-terlambat': item.status === 'Terlambat'}">
+                  {{ item.status || 'Menunggu' }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -46,6 +50,47 @@
     </div>
   </template>
   
+  <script setup>
+definePageMeta({
+  middleware: "auth",
+});
+
+const supabase = useSupabaseClient();
+const router = useRouter();
+const keyword = ref("");
+const pengembalian = ref([]);
+const totalpengembalian = ref(0);
+
+const getpengembalian = async () => {
+  const { data, error } = await supabase
+    .from("pengembalian")
+    .select("*")
+    .ilike("name", `%${keyword.value}%`);
+
+  if (error) {
+    console.error("Error fetching pengembalian:", error);
+  } else {
+    pengembalian.value = data;
+  }
+};
+
+const gettotalPengembalian = async () => {
+  const { count, error } = await supabase
+    .from("pengembalian")
+    .select("*", { count: "exact", head: true });
+
+  if (error) {
+    console.error("Error fetching total pengembalian:", error);
+  } else {
+    totalpengembalian.value = count || 0;
+  }
+};
+
+onMounted(() => {
+  getpengembalian();
+  gettotalPengembalian();
+});
+</script>
   <style scoped>
  * {
   margin: 0;

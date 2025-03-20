@@ -32,6 +32,12 @@
     </div>
   </template>
   
+  <script setup>
+  definePageMeta({
+    middleware:'auth'
+})
+  </script>
+  
   <style scoped>
   /* Memastikan halaman penuh */
   html, body {

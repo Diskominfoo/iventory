@@ -5,54 +5,102 @@
         <router-link to="/peminjamanuser">
           <div class="back-arrow"></div>
         </router-link>
-        <h2>Pinjam Alat</h2>
+        <h2>Formulir Peminjaman</h2>
       </div>
   
-      <!-- Form Peminjaman -->
-      <form>
-        <div class="form-group"><br>
-          <label for="siapa">Siapa?</label>
-          <select required>
-            <option value="">-- Pilih --</option>
-            <option value="Staff">Staff</option>
-            <option value="Magang">Magang</option>
-            <option value="Client">Client</option>
-          </select>
-        </div>
-  
-        <div class="form-group">
-          <label for="namamu">Namamu?</label>
-          <input type="text" placeholder="Tulis nama kamu..." required />
-        </div>
-  
-        <div class="form-group">
-          <label for="alat">Pilih Alat/barang</label>
-          <select required>
-            <option value="">-- Pilih --</option>
-            <option value="Laptop">Laptop</option>
-            <option value="Proyektor">Proyektor</option>
-            <option value="Kamera">Kamera</option>
-          </select>
-        </div>
+             <!-- Form Peminjaman -->
+             <div class="form-container">
+                  <form @submit.prevent="kirimData">
+                      <div class="form-group"><br>
+                          <label for="siapa">Siapa?</label>
+                          <select v-model="form.siapa" required>
+                              <option value="">-- Pilih --</option>
+                              <option value="Staff">Staff</option>
+                              <option value="Magang">Magang</option>
+                              <option value="Client">Tamu</option>
+                          </select>
+                      </div>
 
-        <div class="form-group">
-          <label for="namamu">Jumlah</label>
-          <input type="number" placeholder="Jumlah Brang Yang Akan Dipinjam" required />
-        </div>
-  
-        <div class="form-group">
-          <label for="keperluan">Keperluannya apa?</label>
-          <textarea rows="3" placeholder="Tulis keperluan meminjam alat ini..." required></textarea>
-        </div>
-  
-        <p><em>Dengan menekan tombol "Pinjam", saya bertanggung jawab terhadap alat/barang yang dipinjam sesuai dengan <u>SOP poin 2.i.</u></em></p>
-  
-        <button type="submit">Pinjam</button>
-      </form>
-  
-      <div class="footer">&copy; Diskominfo Kota Tasikmalaya</div>
-    </div>
-  </template>
+                      <div class="form-group">
+                          <label for="namamu">Namamu?</label>
+                          <input v-model="form.name" type="text" placeholder="Tulis nama kamu..." required />
+                      </div>
+
+                      <div class="form-group">
+                          <label for="alat">Pilih produk</label>
+                          <select v-model="form.products_id" required>
+                              <option value="">-- Pilih --</option>
+                              <option value="Laptop">Laptop</option>
+                              <option value="Proyektor">Proyektor</option>
+                              <option value="Kamera">Kamera</option>
+                          </select>
+                      </div>
+
+                      <div class="form-group">
+                          <label for="jumlah">Jumlah</label>
+                          <input v-model.number="form.jumlah" type="number" min="1" placeholder="Jumlah Barang Yang Akan Dipinjam" required />
+                      </div>
+
+                      <div class="form-group">
+                          <label for="keperluan">Keperluannya apa?</label>
+                          <textarea v-model="form.keperluan" rows="3" placeholder="Tulis keperluan meminjam alat ini..." required></textarea>
+                      </div>
+
+                      <p><em>Dengan menekan tombol "Pinjam", saya bertanggung jawab terhadap alat/barang yang dipinjam sesuai dengan <u>SOP poin 2.i.</u></em></p>
+
+                      <div class="form-group">
+                          <button type="submit" :disabled="loading">
+                              {{ loading ? 'Memproses...' : 'Tambah Alat' }}
+                          </button>
+                      </div>
+                  </form>
+
+                  <div class="footer">&copy; Diskominfo Kota Tasikmalaya</div>
+              </div>
+          </div>
+</template>
+
+<script setup>
+definePageMeta({
+  middleware: 'auth'
+});
+
+const supabase = useSupabaseClient();
+const router = useRouter();
+const loading = ref(false);
+
+// Form data
+const form = ref({
+  siapa: "",
+  name: "",
+  products_id: "",
+  jumlah: 1,
+  keperluan: "",
+  status: "Dipinjam"
+});
+
+// Fungsi untuk mengirimkan data ke Supabase
+const kirimData = async () => {
+  loading.value = true;
+  try {
+      const { data, error } = await supabase
+          .from("peminjaman")
+          .insert([form.value])
+          .select();
+      
+      if (error) {
+          throw error;
+      }
+
+      loading.value = false;
+      router.push('/peminjamanuser');
+  } catch (err) {
+      console.error("Terjadi kesalahan:", err.message);
+      loading.value = false;
+  }
+};
+</script>
+
   
   <style scoped>
  html, body {
@@ -64,7 +112,8 @@
 }
 
 .container {
-  background-color: #0071BC;
+  background-color: #005696;
+  color: white;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

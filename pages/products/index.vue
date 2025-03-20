@@ -12,7 +12,7 @@
 
         <div class="my-3">
           <form @submit.prevent="getProducts">
-            <input v-model="keyword" type="search" class="form-control rounded-5" placeholder="Cari nama produk...">
+            <input v-model="keyword" type="search" class="form-control rounded-5" placeholder="Cari nama ...">
           </form>
         </div>
 
@@ -130,8 +130,7 @@ onMounted(() => {
   margin-left: 250px;
   padding: 30px;
   width: 100%;
-  height: 98vh;
-  background-color: #F4F4F4;
+  height: 100vh;
 }
 
 .header {

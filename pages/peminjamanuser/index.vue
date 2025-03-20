@@ -8,6 +8,7 @@
         <div class="nav-links">
           <router-link to="/peminjamanuser">Peminjaman</router-link>
           <router-link to="/pengembalianuser">Pengembalian</router-link>
+          <router-link to="/logout">Logout</router-link>
         </div>
       </div>
   
@@ -20,16 +21,18 @@
               <router-link to="/halpijuser">Pinjam Alat</router-link>
             </button>
           </div>
-          <div class="data-info">30 dari 1000</div>
+          <div class="data-info">Menampilkan {{ peminjaman.length }} dari {{ totalPeminjaman }}</div>
         </div>
   
-        <!-- Search Bar -->
+        <!-- Search Bar --> 
+        <form @submit.prevent="getpeminjaman">
         <div class="search-wrapper">
           <div class="search-container">
             <span class="search-icon">🔍</span>
-            <input type="text" placeholder="search">
+            <input v-model="keyword" type="text" placeholder="search">
           </div>
         </div>
+        </form>
   
         <!-- Table Container -->
         <div class="table-container">
@@ -37,40 +40,28 @@
             <thead>
               <tr>
                 <th>NO.</th>
-                <th>ALAT</th>
-                <th>PEMINJAM</th>
-                <th>KEPERLUAN</th>
-                <th>TGL. PINJAM</th>
-                <th>STATUS</th>
+                <th>Tanggal Pinjam</th>
+                <th>Siapa</th>
+                <th>Nama</th>
+                <th>Produk</th>
+                <th>Jumlah</th>
+                <th>Keperluan</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              <!-- Static Data Rows -->
-              <tr>
-                <td>1.</td>
-                <td>Alat A</td>
-                <td>John Doe</td>
-                <td>Keperluan A</td>
-                <td>01-01-2025</td>
-                <td class="status status-dipinjam">Dipinjam</td>
+              <tr v-for="(item, i) in peminjaman" :key="item.id">
+                <td>{{ i + 1 }}.</td>
+                <td>{{ item.tanggal_pinjam }}</td>
+                <td>{{ item.siapa }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.products_id }}</td>
+                <td>{{ item.jumlah }}</td>
+                <td>{{ item.keperluan }}</td>
+                <td :class="{'status-dipinjam': item.status === 'Dipinjam', 'status-terlambat': item.status === 'Terlambat'}">
+                  {{ item.status || 'Menunggu' }}
+                </td>
               </tr>
-              <tr>
-                <td>2.</td>
-                <td>Alat B</td>
-                <td>Jane Doe</td>
-                <td>Keperluan B</td>
-                <td>02-01-2025</td>
-                <td class="status status-kembali">Kembali</td>
-              </tr>
-              <tr>
-                <td>3.</td>
-                <td>Alat C</td>
-                <td>Sam Smith</td>
-                <td>Keperluan C</td>
-                <td>03-01-2025</td>
-                <td class="status status-dipinjam">Dipinjam</td>
-              </tr>
-              <!-- More rows can be added manually here -->
             </tbody>
           </table>
         </div>
@@ -78,6 +69,48 @@
     </div>
   </template>
   
+  <script setup>
+  definePageMeta({
+    middleware:'auth'
+})
+
+const supabase = useSupabaseClient();
+const router = useRouter();
+const keyword = ref("");
+const peminjaman = ref([]);
+const totalPeminjaman = ref(0);
+
+const getpeminjaman = async () => {
+  const { data, error } = await supabase
+    .from("peminjaman")
+    .select("*")
+    .ilike("name", `%${keyword.value}%`);
+
+  if (error) {
+    console.error("Error fetching peminjaman:", error);
+  } else {
+    peminjaman.value = data;
+  }
+};
+
+const gettotalPeminjaman = async () => {
+  const { count, error } = await supabase
+    .from("peminjaman")
+    .select("*", { count: "exact", head: true });
+
+  if (error) {
+    console.error("Error fetching total peminjaman:", error);
+  } else {
+    totalPeminjaman.value = count || 0;
+  }
+};
+
+onMounted(() => {
+  getpeminjaman();
+  gettotalPeminjaman();
+});
+  </script>
+
   <style scoped>
   /* Global Styles */
   body {
@@ -156,12 +189,10 @@
   }
   
   .data-info {
-    font-size: 14px;
-    color: white;
-    text-align: right;
-    margin-right: 20px;
-  }
-  
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
   /* Search Bar Styles */
   .search-wrapper {
     display: flex;
@@ -173,10 +204,11 @@
     display: flex;
     align-items: center;
     background-color: white;
+    color: #6c757d;
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     padding: 8px;
-    width: 250px;
+    width: 1500px;
   }
   
   .search-container input {

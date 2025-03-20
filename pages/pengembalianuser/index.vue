@@ -8,6 +8,7 @@
         <div class="nav-links">
           <router-link to="/peminjamanuser">Peminjaman</router-link>
           <router-link to="/pengembalianuser">Pengembalian</router-link>
+          <router-link to="/logout">Logout</router-link>
         </div>
       </div>
   
@@ -81,6 +82,12 @@
     </div>
   </template>
   
+  <script setup>
+  definePageMeta({
+    middleware:'auth'
+})
+  </script>
+
   <style scoped>
   /* Global Styles */
   body {
