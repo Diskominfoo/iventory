@@ -5,28 +5,43 @@
     <div class="content">
       <div class="content-main">
         <img src="/img/logo.png" alt="Logo" class="logo" />
+
+        <!-- Header -->
         <div class="header">
           <h1>Daftar Produk</h1>
           <router-link to="/alat" class="btn">Tambah Produk</router-link>
         </div>
 
+        <!-- Pencarian -->
         <div class="my-3">
           <form @submit.prevent="getProducts">
-            <input v-model="keyword" type="search" class="form-control rounded-5" placeholder="Cari nama ...">
+            <input
+              v-model="keyword"
+              type="search"
+              class="form-control rounded-5"
+              placeholder="Cari nama ..."
+            />
           </form>
         </div>
 
-        <div class="my-3 text-muted">menampilkan {{ products.length }} dari {{ totalProducts }}</div>
+        <!-- Jumlah Produk -->
+        <div class="my-3 text-muted">
+          Menampilkan {{ products.length }} dari {{ totalProducts }}
+        </div>
 
-        <div class="table-container">
+        <!-- Loading -->
+        <div v-if="loading" class="loading">Memuat data...</div>
+
+        <!-- Tabel Produk -->
+        <div class="table-container" v-if="!loading">
           <table>
             <thead>
               <tr>
                 <th>NO.</th>
                 <th>Tanggal</th>
-                <th>Nama</th>
+                <th>Nama Produk/Alat</th>
                 <th>Kategori</th>
-                <th>description</th>
+                <th>Deskripsi</th>
                 <th>Kondisi Alat</th>
                 <th>Jenis</th>
                 <th>Tahun</th>
@@ -46,8 +61,15 @@
                 <td>{{ product.tahun }}</td>
                 <td>{{ product.jumlah }}</td>
                 <td>
-                  <button class="action-btn" @click="editProduct(product)">Edit</button>
-                  <button class="action-btn delete-btn" @click="deleteProduct(product.id)">Delete</button>
+                  <button class="action-btn edit-btn" @click="editProduct(product)">
+                    Edit
+                  </button>
+                  <button
+                    class="action-btn delete-btn"
+                    @click="deleteProduct(product.id)"
+                  >
+                    Hapus
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -59,59 +81,75 @@
 </template>
 
 <script setup>
-
 definePageMeta({
-    middleware:'auth'
-})
+  middleware: "auth",
+});
 
 const supabase = useSupabaseClient();
 const router = useRouter();
-const keyword = ref('');
+const keyword = ref("");
 const products = ref([]);
 const totalProducts = ref(0);
+const loading = ref(false);
 
+// Mengambil daftar produk dari Supabase
 const getProducts = async () => {
-  const { data, error } = await supabase.from('products').select('*').ilike('name', `%${keyword.value}%`);
+  loading.value = true;
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .ilike("name", `%${keyword.value}%`);
+
   if (error) {
-    console.error('Error fetching products:', error);
+    console.error("Error fetching products:", error);
   } else {
     products.value = data;
   }
+
+  loading.value = false;
+  getTotalProducts();
 };
 
+// Mengambil total jumlah produk
 const getTotalProducts = async () => {
-  const { count, error } = await supabase.from('products').select('*', { count: 'exact', head: true });
+  const { count, error } = await supabase
+    .from("products")
+    .select("*", { count: "exact", head: true });
+
   if (error) {
-    console.error('Error fetching total products:', error);
+    console.error("Error fetching total products:", error);
   } else {
-    totalProducts.value = count;
+    totalProducts.value = count || 0;
   }
 };
 
+// Navigasi ke halaman edit
 const editProduct = (product) => {
-  router.push(`/alat/edit/${product.id}`);
+  router.push(`/products/${product.id}`);
 };
 
+// Menghapus produk
 const deleteProduct = async (id) => {
-  if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
-    const { error } = await supabase.from('products').delete().eq('id', id);
+  if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+    const { error } = await supabase.from("products").delete().eq("id", id);
+
     if (error) {
-      console.error('Error deleting product:', error);
-      alert('Gagal menghapus produk');
+      console.error("Error deleting product:", error);
+      alert("Gagal menghapus produk");
     } else {
       getProducts();
-      getTotalProducts();
     }
   }
 };
 
+// Mengambil data saat komponen dimuat
 onMounted(() => {
   getProducts();
-  getTotalProducts();
 });
 </script>
 
 <style scoped>
+/* Reset & Global */
 * {
   margin: 0;
   padding: 0;
@@ -133,6 +171,7 @@ onMounted(() => {
   height: 100vh;
 }
 
+/* Header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -146,8 +185,9 @@ onMounted(() => {
   color: #005696;
 }
 
+/* Tombol */
 .btn {
-  background-color: #FFD700;
+  background-color: #ffd700;
   color: black;
   padding: 10px 20px;
   border-radius: 6px;
@@ -159,9 +199,41 @@ onMounted(() => {
 }
 
 .btn:hover {
-  background-color: #FFC107;
+  background-color: #ffc107;
 }
 
+/* Form Pencarian */
+.form-control {
+  font-size: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  height: 50px;
+  width: 100%;
+}
+
+.my-3 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+.rounded-5 {
+  border-radius: 0.5rem;
+}
+
+/* Loading */
+.loading {
+  font-size: 18px;
+  font-weight: bold;
+  color: #005696;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* Tabel */
 .table-container {
   background-color: white;
   padding: 20px;
@@ -187,23 +259,35 @@ table th {
 }
 
 table tr:nth-child(even) {
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
 }
 
+/* Tombol Aksi */
 .action-btn {
-  background-color: #0071BC;
-  color: white;
-  padding: 5px 10px;
+  padding: 8px 12px;
   border-radius: 4px;
   border: none;
   cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
   margin-right: 5px;
 }
 
-.delete-btn {
-  background-color: #E53E3E;
+.edit-btn {
+  background-color: #0071bc;
+  color: white;
 }
 
+.delete-btn {
+  background-color: #e53e3e;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c53030;
+}
+
+/* Logo */
 .logo {
   width: 250px;
   height: auto;
@@ -211,24 +295,15 @@ table tr:nth-child(even) {
   margin: 20px auto;
 }
 
-.form-control {
-  font-size: 1.25rem;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  height: 50px;
-  width: 100%;
-}
+/* Responsive */
+@media (max-width: 768px) {
+  .content-main {
+    margin-left: 0;
+    padding: 20px;
+  }
 
-.my-3 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.text-muted {
-  color: #6c757d;
-}
-
-.rounded-5 {
-  border-radius: 0.5rem;
+  .table-container {
+    overflow-x: auto;
+  }
 }
 </style>

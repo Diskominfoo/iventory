@@ -12,11 +12,18 @@
 
         <div class="my-3">
           <form @submit.prevent="getpeminjaman">
-            <input v-model="keyword" type="search" class="form-control rounded-5" placeholder="Cari nama ..." />
+            <input
+              v-model="keyword"
+              type="search"
+              class="form-control rounded-5"
+              placeholder="Cari nama ..."
+            />
           </form>
         </div>
 
-        <div class="my-3 text-muted">Menampilkan {{ peminjaman.length }} dari {{ totalPeminjaman }}</div>
+        <div class="my-3 text-muted">
+          Menampilkan {{ peminjaman.length }} dari {{ totalPeminjaman }}
+        </div>
 
         <div class="table-container">
           <h2>Daftar Peminjaman</h2>
@@ -39,12 +46,17 @@
                 <td>{{ i + 1 }}.</td>
                 <td>{{ item.tanggal_pinjam }}</td>
                 <td>{{ item.siapa }}</td>
-                <td>{{ item.name }}</td>
+                <td>{{ item.nama }}</td>
                 <td>{{ item.products_id }}</td>
                 <td>{{ item.jumlah }}</td>
                 <td>{{ item.keperluan }}</td>
-                <td :class="{'status-dipinjam': item.status === 'Dipinjam', 'status-terlambat': item.status === 'Terlambat'}">
-                  {{ item.status || 'Menunggu' }}
+                <td
+                  :class="{
+                    'status-dipinjam': item.status === 'Dipinjam',
+                    'status-terlambat': item.status === 'Terlambat',
+                  }"
+                >
+                  {{ item.status || "Menunggu" }}
                 </td>
               </tr>
             </tbody>
@@ -56,10 +68,6 @@
 </template>
 
 <script setup>
-definePageMeta({
-  middleware: "auth",
-});
-
 const supabase = useSupabaseClient();
 const router = useRouter();
 const keyword = ref("");
@@ -152,7 +160,7 @@ onMounted(() => {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 table {

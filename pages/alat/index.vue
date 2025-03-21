@@ -1,70 +1,98 @@
 <template>
   <div class="dashboard">
-    <!-- Menyisipkan Menu Sidebar -->
     <Menu />
-
-    <!-- Content -->
     <div class="content">
       <div class="content-main">
-        <div class="header">
-          <h1>Tambah Alat</h1>
-        </div>
-        <!-- <h1>{{ form.description }}</h1> -->
         <div class="form-container">
           <h2>Formulir Tambah Alat</h2>
 
-          <!-- Notifikasi -->
           <div v-if="notif.show" :class="['notification', notif.type]">
             {{ notif.message }}
           </div>
 
           <form @submit.prevent="kirimData">
+            <!-- Nama Alat (Dropdown dari Supabase) -->
             <div class="form-group">
               <label for="name">Nama Alat</label>
-              <input v-model="form.name" type="text" id="name" placeholder="Masukkan Nama Alat" required />
+              <select v-model="form.name" id="name" required>
+                <option value="">-- Pilih --</option>
+                <option v-for="alat in alatList" :key="alat.id" :value="alat.name">
+                  {{ alat.name }}
+                </option>
+              </select>
             </div>
 
+            <!-- Kategori (Dropdown dari Supabase) -->
             <div class="form-group">
               <label for="category">Kategori</label>
               <select v-model="form.kategori" id="category" required>
-                <option value="PC">PC</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Monitor">Monitor</option>
-                <option value="Printer">Printer</option>
+                <option value="">-- Pilih --</option>
+                <option v-for="kat in kategoriList" :key="kat.id" :value="kat.name">
+                  {{ kat.name }}
+                </option>
               </select>
             </div>
 
+            <!-- Deskripsi (Dropdown dari Supabase) -->
             <div class="form-group">
-              <label for="specification">description</label>
-              <input v-model="form.description" type="text" id="description" placeholder="Masukkan description Alat" required />
+              <label for="description">Deskripsi</label>
+              <select v-model="form.description" id="description" required>
+                <option value="">-- Pilih --</option>
+                <option v-for="desc in descriptionList" :key="desc.id" :value="desc.name">
+                  {{ desc.name }}
+                </option>
+              </select>
             </div>
 
+            <!-- Kondisi Alat -->
             <div class="form-group">
               <label for="condition">Kondisi Alat</label>
-              <input v-model="form.kondisi" type="text" id="condition" placeholder="Masukkan Kondisi Alat" required />
+              <select v-model="form.kondisi" id="condition" required>
+                <option value="">-- Pilih --</option>
+                <option value="Baik">Baik</option>
+                <option value="Rusak">Rusak</option>
+              </select>
             </div>
 
+            <!-- Jenis (Dropdown dari Supabase) -->
             <div class="form-group">
               <label for="type">Jenis</label>
               <select v-model="form.jenis" id="type" required>
-                <option value="Aset">Aset</option>
-                <option value="Non Aset">Non Aset</option>
+                <option value="">-- Pilih --</option>
+                <option v-for="j in jenisList" :key="j.id" :value="j.name">
+                  {{ j.name }}
+                </option>
               </select>
             </div>
 
+            <!-- Tahun -->
             <div class="form-group">
               <label for="year">Tahun</label>
-              <input v-model="form.tahun" type="number" id="year" placeholder="Masukkan Tahun Alat" required />
-            </div>
-            
-            <div class="form-group">
-              <label for="jumlah">Jumlah</label>
-              <input v-model="form.jumlah" type="number" id="jumlah" placeholder="Masukkan jumlah Alat" required />
+              <input
+                v-model="form.tahun"
+                type="number"
+                id="year"
+                placeholder="Masukkan Tahun Alat"
+                required
+              />
             </div>
 
+            <!-- Jumlah -->
+            <div class="form-group">
+              <label for="jumlah">Jumlah</label>
+              <input
+                v-model="form.jumlah"
+                type="number"
+                id="jumlah"
+                placeholder="Masukkan jumlah Alat"
+                required
+              />
+            </div>
+
+            <!-- Tombol Submit -->
             <div class="form-group">
               <button type="submit" :disabled="loading">
-                {{ loading ? 'Memproses...' : 'Tambah Alat' }}
+                {{ loading ? "Memproses..." : "Tambah Alat" }}
               </button>
             </div>
           </form>
@@ -76,8 +104,9 @@
 
 <script setup>
 definePageMeta({
-    middleware:'auth'
-})
+  middleware: "auth",
+});
+
 const supabase = useSupabaseClient();
 const router = useRouter();
 
@@ -89,101 +118,82 @@ const form = ref({
   kondisi: "",
   jenis: "",
   tahun: "",
-  jumlah: ""
+  jumlah: "",
 });
 
 // Status loading
 const loading = ref(false);
 
 // Notifikasi
-const notif = ref({
-  show: false,
-  message: '',
-  type: 'success'
-});
+const notif = ref({ show: false, message: "", type: "success" });
 
 // Fungsi untuk menampilkan notifikasi
-const showNotification = (message, type = 'success') => {
-  notif.value = {
-    show: true,
-    message,
-    type
-  };
-
+const showNotification = (message, type = "success") => {
+  notif.value = { show: true, message, type };
   setTimeout(() => {
     notif.value.show = false;
   }, 3000);
 };
 
+// Fetch Data untuk Dropdown
+const { data: alatList } = await useAsyncData("alat", async () => {
+  const { data } = await supabase.from("alat").select("*");
+  return data || [];
+});
+
+const { data: kategoriList } = await useAsyncData("kategori", async () => {
+  const { data } = await supabase.from("kategori").select("*");
+  return data || [];
+});
+
+const { data: descriptionList } = await useAsyncData("description", async () => {
+  const { data } = await supabase.from("description").select("*");
+  return data || [];
+});
+
+const { data: jenisList } = await useAsyncData("jenis", async () => {
+  const { data } = await supabase.from("jenis").select("*");
+  return data || [];
+});
+
 // Fungsi untuk mengirimkan data ke Supabase
 const kirimData = async () => {
-//   if (loading.value) return;
+  try {
+    loading.value = true;
 
-//   try {
-//     loading.value = true;
+    const tanggalHariIni = new Date().toISOString().split("T")[0];
 
-//     // Format tanggal hari ini
-//     const tanggalHariIni = new Date().toISOString().split('T')[0];
+    const { error } = await supabase.from("products").insert([
+      {
+        name: form.value.name,
+        kategori: form.value.kategori,
+        description: form.value.description,
+        kondisi: form.value.kondisi,
+        jenis: form.value.jenis,
+        tahun: form.value.tahun,
+        jumlah: form.value.jumlah,
+        tanggal: tanggalHariIni,
+      },
+    ]);
 
-//     // Kirim data ke Supabase
-//     const { data, error } = await supabase
-//       .from('products')
-//       .insert([{
-//         name: form.value.name,
-//         kategori: form.value.kategori,
-//         spesifikasi: form.value.spesifikasi,
-//         kondisi: form.value.kondisi,
-//         jenis: form.value.jenis,
-//         tahun: form.value.tahun,
-//         jumlah: form.value.jumlah,
-//         tanggal: tanggalHariIni
-//       }])
-//       .select();
+    if (error) {
+      console.error("Error inserting data:", error);
+      showNotification("Terjadi kesalahan saat menambah alat", "error");
+      return;
+    }
 
-//     if (error) {
-//       console.error('Error inserting data:', error);
-//       showNotification('Terjadi kesalahan saat menambah alat', 'error');
-//       return;
-//     }
+    showNotification("Alat berhasil ditambahkan");
 
-//     console.log('Data berhasil disimpan:', data);
-
-//     // Tampilkan notifikasi sukses
-//     showNotification('Alat berhasil ditambahkan');
-
-//     // Reset form setelah sukses
-//     form.value = {
-//       name: "",
-//       kategori: "",
-//       spesifikasi: "",
-//       kondisi: "",
-//       jenis: "",
-//       tahun: "",
-//       jumlah: ""
-//     };
-
-//     // Redirect ke halaman products setelah 1.5 detik
-//     setTimeout(() => {
-//       router.push('/products');
-//     }, 1500);
-
-//   } catch (err) {
-//     console.error('Unexpected error:', err);
-//     showNotification('Terjadi kesalahan yang tidak terduga', 'error');
-//   } finally {
-//     loading.value = false;
-//   }
-  loading.value = true;
-  const { data, error } = await supabase
-    .from("products")
-    .insert([form.value])
-    .select()
-  if(data) {
+    setTimeout(() => {
+      router.push("/products");
+    }, 1500);
+  } catch (err) {
+    console.error("Unexpected error:", err);
+    showNotification("Terjadi kesalahan yang tidak terduga", "error");
+  } finally {
     loading.value = false;
-    navigateTo('/products')
   }
-  console.log(form.value)
-}
+};
 </script>
 
 <style scoped>
@@ -206,24 +216,11 @@ const kirimData = async () => {
   padding: 30px;
   width: 100%;
   height: 100vh;
-  background-color: #F4F4F4;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.header h1 {
-  font-size: 28px;
-  font-weight: bold;
-  color: #005696;
 }
 
 .form-container {
-  background-color: white;
+  background-color: #005696;
+  color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -234,7 +231,7 @@ const kirimData = async () => {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #005696;
+  color: #ffd700;
 }
 
 .notification {
@@ -267,7 +264,8 @@ const kirimData = async () => {
   display: block;
 }
 
-.form-group input, .form-group select {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 12px;
   font-size: 16px;
@@ -276,13 +274,14 @@ const kirimData = async () => {
   outline: none;
 }
 
-.form-group input:focus, .form-group select:focus {
-  border-color: #0071BC;
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #0071bc;
 }
 
 .form-group button {
   padding: 12px 24px;
-  background-color: #FFD700;
+  background-color: #ffd700;
   color: black;
   border: none;
   border-radius: 6px;
@@ -293,7 +292,7 @@ const kirimData = async () => {
 }
 
 .form-group button:hover {
-  background-color: #FFC107;
+  background-color: #ffc107;
 }
 
 .form-group button:disabled {

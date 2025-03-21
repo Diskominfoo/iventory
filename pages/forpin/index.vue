@@ -1,104 +1,159 @@
 <template>
   <div class="dashboard">
-      <!-- Menyisipkan Menu Sidebar -->
-      <Menu /> 
+    <Menu />
+    <div class="content">
+      <div class="content-main">
+        <div class="form-container">
+          <h2>Formulir Peminjaman</h2>
+          <form @submit.prevent="kirimData">
+            <div class="form-group">
+              <label for="siapa">Siapa?</label>
+              <select v-model="form.siapa" @change="handleSiapaChange" required>
+                <option value="">-- Pilih --</option>
+                <option v-for="s in siapaList" :key="s.id" :value="s.id">
+                  {{ s.nama }}
+                </option>
+              </select>
+            </div>
 
-      <div class="content">
-          <div class="content-main">
+            <!-- Pilihan nama dari database jika bukan tamu -->
+            <div class="form-group" v-if="form.siapa && !isTamu">
+              <label for="peminjam">Namamu?</label>
+              <select v-model="form.peminjam_id" required>
+                <option value="">-- Pilih --</option>
+                <option v-for="p in peminjamList" :key="p.id" :value="p.id">
+                  {{ p.nama }}
+                </option>
+              </select>
+            </div>
 
-              <!-- Form Peminjaman -->
-              <div class="form-container">
-              <h2>Formulir Peminjaman</h2>
-                  <form @submit.prevent="kirimData">
-                      <div class="form-group">
-                          <label for="siapa">Siapa?</label>
-                          <select v-model="form.siapa" required>
-                              <option value="">-- Pilih --</option>
-                              <option value="Staff">Staff</option>
-                              <option value="Magang">Magang</option>
-                              <option value="Client">Tamu</option>
-                          </select>
-                      </div>
+            <!-- Input manual jika yang dipilih adalah tamu -->
+            <div class="form-group" v-if="isTamu">
+              <label for="nama_manual">Nama</label>
+              <input
+                v-model="form.nama_manual"
+                type="text"
+                minlength="100"
+                placeholder="Tulis nama kamu..."
+                required
+              />
+            </div>
 
-                      <div class="form-group">
-                          <label for="namamu">Namamu?</label>
-                          <input v-model="form.name" type="text" placeholder="Tulis nama kamu..." required />
-                      </div>
+            <div class="form-group">
+              <label for="alat">Pilih produk</label>
+              <select v-model="form.alat_id" required>
+                <option value="">-- Pilih --</option>
+                <option v-for="a in alatList" :key="a.id" :value="a.id">
+                  {{ a.name }}
+                </option>
+              </select>
+            </div>
 
-                      <div class="form-group">
-                          <label for="alat">Pilih produk</label>
-                          <select v-model="form.products_id" required>
-                              <option value="">-- Pilih --</option>
-                              <option value="Laptop">Laptop</option>
-                              <option value="Proyektor">Proyektor</option>
-                              <option value="Kamera">Kamera</option>
-                          </select>
-                      </div>
+            <div class="form-group">
+              <label for="jumlah">Jumlah</label>
+              <input v-model.number="form.jumlah" type="number" min="1" required />
+            </div>
 
-                      <div class="form-group">
-                          <label for="jumlah">Jumlah</label>
-                          <input v-model.number="form.jumlah" type="number" min="1" placeholder="Jumlah Barang Yang Akan Dipinjam" required />
-                      </div>
+            <div class="form-group">
+              <label for="keperluan">Keperluan</label>
+              <textarea v-model="form.keperluan" rows="3" required></textarea>
+            </div>
 
-                      <div class="form-group">
-                          <label for="keperluan">Keperluannya apa?</label>
-                          <textarea v-model="form.keperluan" rows="3" placeholder="Tulis keperluan meminjam alat ini..." required></textarea>
-                      </div>
+            <p><em>Dengan menekan tombol "Pinjam", saya bertanggung jawab...</em></p>
 
-                      <p><em>Dengan menekan tombol "Pinjam", saya bertanggung jawab terhadap alat/barang yang dipinjam sesuai dengan <u>SOP poin 2.i.</u></em></p>
-
-                      <div class="form-group">
-                          <button type="submit" :disabled="loading">
-                              {{ loading ? 'Memproses...' : 'Tambah Alat' }}
-                          </button>
-                      </div>
-                  <div class="footer">&copy; Diskominfo Kota Tasikmalaya</div>
-                  </form>
-              </div>
-          </div>
+            <div class="form-group">
+              <button type="submit" :disabled="loading">
+                {{ loading ? "Memproses..." : "Pinjam" }}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-
-definePageMeta({
-  middleware: 'auth'
-});
-
 const supabase = useSupabaseClient();
 const router = useRouter();
 const loading = ref(false);
-
-// Form data
+const siapaList = ref([]);
+const peminjamList = ref([]);
+const alatList = ref([]);
 const form = ref({
-  siapa: "",
-  name: "",
-  products_id: "",
+  siapa: "", // Menyimpan ID dari tabel "siapa"
+  peminjam_id: "",
+  nama_manual: "",
+  alat_id: "",
   jumlah: 1,
-  keperluan: ""
+  keperluan: "",
+  status: "Dipinjam",
 });
 
-// Fungsi untuk mengirimkan data ke Supabase
+// Properti komputasi untuk memeriksa apakah yang dipilih adalah "Tamu"
+const isTamu = computed(() => {
+  const tamu = siapaList.value.find((s) => s.nama.toLowerCase() === "tamu");
+  return form.value.siapa === tamu?.id;
+});
+
+// Load data dari Supabase
+const loadData = async () => {
+  try {
+    const { data: siapaData, error: siapaError } = await supabase
+      .from("siapa")
+      .select("*");
+    if (siapaError) throw siapaError;
+
+    const { data: peminjamData, error: peminjamError } = await supabase
+      .from("peminjam")
+      .select("*");
+    if (peminjamError) throw peminjamError;
+
+    const { data: alatData, error: alatError } = await supabase.from("alat").select("*");
+    if (alatError) throw alatError;
+
+    siapaList.value = siapaData || [];
+    peminjamList.value = peminjamData || [];
+    alatList.value = alatData || [];
+  } catch (error) {
+    console.error("Gagal memuat data:", error.message);
+  }
+};
+
+// Mengatur ulang peminjam jika memilih "Tamu"
+const handleSiapaChange = () => {
+  if (isTamu.value) {
+    form.value.peminjam_id = "";
+  } else {
+    form.value.nama_manual = "";
+  }
+};
+
 const kirimData = async () => {
   loading.value = true;
   try {
-      const { data, error } = await supabase
-          .from("products")
-          .insert([form.value])
-          .select();
-      
-      if (error) {
-          throw error;
-      }
+    const namaFinal = isTamu.value ? form.value.nama_manual : null;
 
-      loading.value = false;
-      router.push('/peminjaman');
+    await supabase.from("peminjaman").insert([
+      {
+        siapa_id: form.value.siapa,
+        peminjam_id: form.value.peminjam_id || null,
+        nama_manual: namaFinal,
+        alat_id: form.value.alat_id,
+        jumlah: form.value.jumlah,
+        keperluan: form.value.keperluan,
+        status: "Dipinjam",
+      },
+    ]);
+    router.push("/peminjaman");
   } catch (err) {
-      console.error("Terjadi kesalahan:", err.message);
-      loading.value = false;
+    console.error("Terjadi kesalahan:", err.message);
+  } finally {
+    loading.value = false;
   }
 };
+
+onMounted(loadData);
 </script>
 
 <style scoped>
@@ -124,16 +179,16 @@ const kirimData = async () => {
 }
 
 .header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  h2 {
-    margin: 0;
-    color: #FFD700;
-    font-size: 24px;
-  }
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 {
+  margin: 0;
+  color: #ffd700;
+  font-size: 24px;
+}
 
 /* Form Styling */
 .form-container {
@@ -148,7 +203,7 @@ const kirimData = async () => {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #FFD700;
+  color: #ffd700;
 }
 
 .form-group {
@@ -175,7 +230,7 @@ const kirimData = async () => {
 }
 
 button {
-  background-color: #FFD700;
+  background-color: #ffd700;
   color: black;
   padding: 10px;
   border: none;
@@ -188,7 +243,7 @@ button {
 }
 
 button:hover {
-  background-color: #FFC107;
+  background-color: #ffc107;
 }
 
 button:disabled {
