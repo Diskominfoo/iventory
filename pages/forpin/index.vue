@@ -6,6 +6,7 @@
         <div class="form-container">
           <h2>Formulir Peminjaman</h2>
           <form @submit.prevent="kirimData">
+            <!-- PILIH SIAPA -->
             <div class="form-group">
               <label for="siapa">Siapa?</label>
               <select v-model="form.siapa" @change="handleSiapaChange" required>
@@ -16,10 +17,9 @@
               </select>
             </div>
 
-            <!-- Pilihan nama dari database jika bukan tamu -->
             <div class="form-group" v-if="form.siapa && !isTamu">
               <label for="peminjam">Namamu?</label>
-              <select v-model="form.peminjam_id" required>
+              <select v-model="form.peminjam_id" @change="syncNama" required>
                 <option value="">-- Pilih --</option>
                 <option v-for="p in peminjamList" :key="p.id" :value="p.id">
                   {{ p.nama }}
@@ -27,18 +27,19 @@
               </select>
             </div>
 
-            <!-- Input manual jika yang dipilih adalah tamu -->
+            <!-- INPUT MANUAL UNTUK TAMU -->
             <div class="form-group" v-if="isTamu">
-              <label for="nama_manual">Nama</label>
+              <label for="nama">Nama</label>
               <input
-                v-model="form.nama_manual"
+                v-model="form.nama"
                 type="text"
-                minlength="100"
+                minlength="3"
                 placeholder="Tulis nama kamu..."
                 required
               />
             </div>
 
+            <!-- PRODUK -->
             <div class="form-group">
               <label for="alat">Pilih produk</label>
               <select v-model="form.alat_id" required>
@@ -49,18 +50,26 @@
               </select>
             </div>
 
+            <!-- JUMLAH -->
             <div class="form-group">
               <label for="jumlah">Jumlah</label>
               <input v-model.number="form.jumlah" type="number" min="1" required />
             </div>
 
+            <!-- KEPERLUAN -->
             <div class="form-group">
               <label for="keperluan">Keperluan</label>
               <textarea v-model="form.keperluan" rows="3" required></textarea>
             </div>
 
-            <p><em>Dengan menekan tombol "Pinjam", saya bertanggung jawab...</em></p>
+            <p>
+              <em
+                >Dengan menekan tombol "Pinjam", saya bertanggung jawab atas barang
+                ini.</em
+              >
+            </p>
 
+            <!-- TOMBOL -->
             <div class="form-group">
               <button type="submit" :disabled="loading">
                 {{ loading ? "Memproses..." : "Pinjam" }}
@@ -74,43 +83,50 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: "auth",
+});
+
 const supabase = useSupabaseClient();
 const router = useRouter();
 const loading = ref(false);
+
 const siapaList = ref([]);
 const peminjamList = ref([]);
 const alatList = ref([]);
+
 const form = ref({
-  siapa: "", // Menyimpan ID dari tabel "siapa"
+  siapa: "",
   peminjam_id: "",
-  nama_manual: "",
+  nama: "",
   alat_id: "",
   jumlah: 1,
   keperluan: "",
   status: "Dipinjam",
 });
 
-// Properti komputasi untuk memeriksa apakah yang dipilih adalah "Tamu"
+// Apakah yang dipilih "Tamu"
 const isTamu = computed(() => {
   const tamu = siapaList.value.find((s) => s.nama.toLowerCase() === "tamu");
   return form.value.siapa === tamu?.id;
 });
 
-// Load data dari Supabase
+// Sinkronisasi nama dari peminjam ke form.nama
+const syncNama = () => {
+  const selected = peminjamList.value.find((p) => p.id === form.value.peminjam_id);
+  form.value.nama = selected?.nama || "";
+};
+
+const handleSiapaChange = () => {
+  form.value.peminjam_id = "";
+  form.value.nama = "";
+};
+
 const loadData = async () => {
   try {
-    const { data: siapaData, error: siapaError } = await supabase
-      .from("siapa")
-      .select("*");
-    if (siapaError) throw siapaError;
-
-    const { data: peminjamData, error: peminjamError } = await supabase
-      .from("peminjam")
-      .select("*");
-    if (peminjamError) throw peminjamError;
-
-    const { data: alatData, error: alatError } = await supabase.from("alat").select("*");
-    if (alatError) throw alatError;
+    const { data: siapaData } = await supabase.from("siapa").select("*");
+    const { data: peminjamData } = await supabase.from("peminjam").select("*");
+    const { data: alatData } = await supabase.from("alat").select("*");
 
     siapaList.value = siapaData || [];
     peminjamList.value = peminjamData || [];
@@ -120,29 +136,18 @@ const loadData = async () => {
   }
 };
 
-// Mengatur ulang peminjam jika memilih "Tamu"
-const handleSiapaChange = () => {
-  if (isTamu.value) {
-    form.value.peminjam_id = "";
-  } else {
-    form.value.nama_manual = "";
-  }
-};
-
 const kirimData = async () => {
   loading.value = true;
   try {
-    const namaFinal = isTamu.value ? form.value.nama_manual : null;
-
     await supabase.from("peminjaman").insert([
       {
         siapa_id: form.value.siapa,
-        peminjam_id: form.value.peminjam_id || null,
-        nama_manual: namaFinal,
+        peminjam_id: isTamu.value ? null : form.value.peminjam_id,
+        nama: form.value.nama,
         alat_id: form.value.alat_id,
         jumlah: form.value.jumlah,
         keperluan: form.value.keperluan,
-        status: "Dipinjam",
+        status: form.value.status,
       },
     ]);
     router.push("/peminjaman");

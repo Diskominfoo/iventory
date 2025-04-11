@@ -45,9 +45,9 @@
               <tr v-for="(item, i) in peminjaman" :key="item.id">
                 <td>{{ i + 1 }}.</td>
                 <td>{{ item.tanggal_pinjam }}</td>
-                <td>{{ item.siapa }}</td>
+                <td>{{ item.siapa_id }}</td>
                 <td>{{ item.nama }}</td>
-                <td>{{ item.products_id }}</td>
+                <td>{{ item.alat_id }}</td>
                 <td>{{ item.jumlah }}</td>
                 <td>{{ item.keperluan }}</td>
                 <td
@@ -68,6 +68,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: "auth",
+});
+
 const supabase = useSupabaseClient();
 const router = useRouter();
 const keyword = ref("");
@@ -78,7 +82,7 @@ const getpeminjaman = async () => {
   const { data, error } = await supabase
     .from("peminjaman")
     .select("*")
-    .ilike("name", `%${keyword.value}%`);
+    .ilike("nama", `%${keyword.value}%`);
 
   if (error) {
     console.error("Error fetching peminjaman:", error);

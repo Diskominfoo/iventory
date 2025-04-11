@@ -56,9 +56,9 @@
             <tr v-for="(item, i) in peminjaman" :key="item.id">
               <td>{{ i + 1 }}.</td>
               <td>{{ item.tanggal_pinjam }}</td>
-              <td>{{ item.siapa }}</td>
-              <td>{{ item.name }}</td>
-              <td>{{ item.products_id }}</td>
+              <td>{{ item.siapa_id }}</td>
+              <td>{{ item.nama }}</td>
+              <td>{{ item.alat_id }}</td>
               <td>{{ item.jumlah }}</td>
               <td>{{ item.keperluan }}</td>
               <td
@@ -92,7 +92,7 @@ const getpeminjaman = async () => {
   const { data, error } = await supabase
     .from("peminjaman")
     .select("*")
-    .ilike("name", `%${keyword.value}%`);
+    .ilike("nama", `%${keyword.value}%`);
 
   if (error) {
     console.error("Error fetching peminjaman:", error);
