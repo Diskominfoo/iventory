@@ -45,15 +45,17 @@
               <tr v-for="(item, i) in peminjaman" :key="item.id">
                 <td>{{ i + 1 }}.</td>
                 <td>{{ item.tanggal_pinjam }}</td>
-                <td>{{ item.siapa_id }}</td>
+                <td>{{ item.siapa.nama }}</td>
+                <!-- Menampilkan nama siapa dari relasi -->
                 <td>{{ item.nama }}</td>
-                <td>{{ item.alat_id }}</td>
+                <td>{{ item.alat.nama }}</td>
                 <td>{{ item.jumlah }}</td>
                 <td>{{ item.keperluan }}</td>
                 <td
                   :class="{
                     'status-dipinjam': item.status === 'Dipinjam',
-                    'status-terlambat': item.status === 'Terlambat',
+                    'status-dikembalikan': item.status === 'Sudah Dikembalikan',
+                    'status-menunggu': !item.status || item.status === 'Menunggu',
                   }"
                 >
                   {{ item.status || "Menunggu" }}
@@ -78,11 +80,15 @@ const keyword = ref("");
 const peminjaman = ref([]);
 const totalPeminjaman = ref(0);
 
+// Fungsi untuk mengambil data peminjaman
 const getpeminjaman = async () => {
   const { data, error } = await supabase
     .from("peminjaman")
-    .select("*")
-    .ilike("nama", `%${keyword.value}%`);
+    .select(
+      "id, alat_id, alat(nama), nama ,tanggal_pinjam, jumlah, keperluan, status, siapa_id, siapa(nama)"
+    ) // Mengambil data dari siapa
+    .ilike("nama", `%${keyword.value}%`) // Pencarian nama
+    .limit(10); // Menambahkan limit untuk menampilkan sejumlah data
 
   if (error) {
     console.error("Error fetching peminjaman:", error);
@@ -91,6 +97,7 @@ const getpeminjaman = async () => {
   }
 };
 
+// Fungsi untuk mengambil jumlah total peminjaman
 const gettotalPeminjaman = async () => {
   const { count, error } = await supabase
     .from("peminjaman")
@@ -103,6 +110,7 @@ const gettotalPeminjaman = async () => {
   }
 };
 
+// Fungsi dijalankan ketika komponen dimuat
 onMounted(() => {
   getpeminjaman();
   gettotalPeminjaman();
@@ -194,8 +202,13 @@ table tr:nth-child(even) {
   font-weight: bold;
 }
 
-.status-terlambat {
+.status-dikembalikan {
   color: #e53e3e;
+  font-weight: bold;
+}
+
+.status-menunggu {
+  color: #ffcc00;
   font-weight: bold;
 }
 

@@ -9,6 +9,7 @@
     </div>
 
     <!-- Form Peminjaman -->
+    <br />
     <div class="form-container">
       <form @submit.prevent="kirimData">
         <!-- PILIH SIAPA -->
@@ -50,7 +51,7 @@
           <select v-model="form.alat_id" required>
             <option value="">-- Pilih --</option>
             <option v-for="a in alatList" :key="a.id" :value="a.id">
-              {{ a.name }}
+              {{ a.nama }}
             </option>
           </select>
         </div>

@@ -28,6 +28,7 @@
       </div>
 
       <!-- Search Bar -->
+      <br />
       <form @submit.prevent="getpeminjaman">
         <div class="search-wrapper">
           <div class="search-container">
@@ -39,6 +40,8 @@
 
       <!-- Table Container -->
       <div class="table-container">
+        <h2>Daftar Peminjaman</h2>
+        <br />
         <table>
           <thead>
             <tr>
@@ -56,15 +59,17 @@
             <tr v-for="(item, i) in peminjaman" :key="item.id">
               <td>{{ i + 1 }}.</td>
               <td>{{ item.tanggal_pinjam }}</td>
-              <td>{{ item.siapa_id }}</td>
+              <td>{{ item.siapa.nama }}</td>
+              <!-- Menampilkan nama siapa dari relasi -->
               <td>{{ item.nama }}</td>
-              <td>{{ item.alat_id }}</td>
+              <td>{{ item.alat.nama }}</td>
               <td>{{ item.jumlah }}</td>
               <td>{{ item.keperluan }}</td>
               <td
                 :class="{
                   'status-dipinjam': item.status === 'Dipinjam',
-                  'status-terlambat': item.status === 'Terlambat',
+                  'status-dikembalikan': item.status === 'Sudah Dikembalikan',
+                  'status-menunggu': !item.status || item.status === 'Menunggu',
                 }"
               >
                 {{ item.status || "Menunggu" }}
@@ -88,11 +93,15 @@ const keyword = ref("");
 const peminjaman = ref([]);
 const totalPeminjaman = ref(0);
 
+// Fungsi untuk mengambil data peminjaman
 const getpeminjaman = async () => {
   const { data, error } = await supabase
     .from("peminjaman")
-    .select("*")
-    .ilike("nama", `%${keyword.value}%`);
+    .select(
+      "id, alat_id, alat(nama), nama ,tanggal_pinjam, jumlah, keperluan, status, siapa_id, siapa(nama)"
+    ) // Mengambil data dari siapa
+    .ilike("nama", `%${keyword.value}%`) // Pencarian nama
+    .limit(10); // Menambahkan limit untuk menampilkan sejumlah data
 
   if (error) {
     console.error("Error fetching peminjaman:", error);
@@ -101,6 +110,7 @@ const getpeminjaman = async () => {
   }
 };
 
+// Fungsi untuk mengambil jumlah total peminjaman
 const gettotalPeminjaman = async () => {
   const { count, error } = await supabase
     .from("peminjaman")
@@ -113,6 +123,7 @@ const gettotalPeminjaman = async () => {
   }
 };
 
+// Fungsi dijalankan ketika komponen dimuat
 onMounted(() => {
   getpeminjaman();
   gettotalPeminjaman();
@@ -234,37 +245,32 @@ body {
 
 /* Table Styles */
 .table-container {
-  width: 100%;
-  overflow-x: auto;
-  margin-top: 10px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3);
+  margin-top: 10px;
 }
 
-th,
-td {
-  padding: 12px;
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 10px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
 }
 
-th {
+table th {
   background-color: #005696;
   color: white;
 }
 
-/* Status Styles */
-.status {
-  padding: 6px;
-  border-radius: 6px;
-  font-weight: bold;
-  text-align: center;
+table tr:nth-child(even) {
+  background-color: #f4f4f4;
 }
 
 .status-dipinjam {
@@ -272,9 +278,9 @@ th {
   font-weight: bold;
 }
 
-.status-kembali {
-  background-color: #73a839;
-  color: white;
+.status-terlambat {
+  color: #e53e3e;
+  font-weight: bold;
 }
 
 /* Button Styles */

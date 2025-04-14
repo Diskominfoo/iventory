@@ -1,7 +1,8 @@
 <template>
   <div>
     <!-- Header Title -->
-    <div class="header-title">Sistem Peminjaman Alat Diskominfo</div><br>
+    <div class="header-title">Sistem Peminjaman Alat Diskominfo</div>
+    <br />
     <!-- Navbar -->
     <div class="navbar">
       <div class="nav-links">
@@ -20,47 +21,52 @@
             <router-link to="/halpeguser">Kembalian Alat</router-link>
           </button>
         </div>
-        <div class="data-info">Menampilkan {{ pengembalian.length }} dari {{ TotalPengembalian }}</div>
-      </div>
-
-      <!-- Search Bar --> 
-      <form @submit.prevent="getpengembalian">
-      <div class="search-wrapper">
-        <div class="search-container">
-          <span class="search-icon">🔍</span>
-          <input v-model="keyword" type="text" placeholder="search">
+        <div class="data-info">
+          Menampilkan {{ pengembalian.length }} dari {{ totalPengembalian }}
         </div>
       </div>
+
+      <!-- Search Bar -->
+      <br />
+      <form @submit.prevent="getPengembalian">
+        <div class="search-wrapper">
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input v-model="keyword" type="text" placeholder="search" />
+          </div>
+        </div>
       </form>
 
       <!-- Table Container -->
       <div class="table-container">
+        <h2>Daftar Pengembalian</h2>
+        <br />
         <table>
-            <thead>
-              <tr>
-                <th>NO.</th>
-                <th>Tanggal Dikembalikan</th>
-                <th>siapa</th>
-                <th>Nama</th>
-                <th>Produk</th>
-                <th>Keadaan</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, i) in pengembalian" :key="item.id">
-                <td>{{ i + 1 }}.</td>
-                <td>{{ item.tanggal_pengembalian }}</td>
-                <td>{{ item.siapa }}</td>
-                <td>{{ item.peminjaman_id }}</td>
-                <td>{{ item.product_id }}</td>
-                <td>{{ item.keadaan }}</td>
-                <td :class="{'status-dikembalikan': item.status === 'Dikembalikan', 'status-terlambat': item.status === 'Terlambat'}">
-                  {{ item.status || 'Menunggu' }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <thead>
+            <tr>
+              <th>NO.</th>
+              <th>Tanggal Dikembalikan</th>
+              <th>Siapa</th>
+              <th>Nama</th>
+              <th>Produk</th>
+              <th>Keadaan</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, i) in pengembalian" :key="item.id">
+              <td>{{ i + 1 }}.</td>
+              <td>{{ item.tanggal_kembali }}</td>
+              <td>{{ item.siapa?.nama }}</td>
+              <td>{{ item.peminjaman?.nama }}</td>
+              <td>{{ item.peminjaman?.alat?.nama }}</td>
+              <td>{{ item.kondisi_barang }}</td>
+              <td :class="{ 'status-selesai': item.status === 'Selesai' }">
+                {{ item.status || "Menunggu" }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -72,16 +78,29 @@ definePageMeta({
 });
 
 const supabase = useSupabaseClient();
-const router = useRouter();
 const keyword = ref("");
 const pengembalian = ref([]);
-const TotalPengembalian = ref(0);
+const totalPengembalian = ref(0);
+const selectedPeminjamanId = ref(null); // ID peminjaman yang akan dikembalikan
 
-const getpengembalian = async () => {
+// Fungsi untuk mengambil data pengembalian
+const getPengembalian = async () => {
   const { data, error } = await supabase
     .from("pengembalian")
-    .select("*")
-    .ilike("peminjaman_id", `%${keyword.value}%`);
+    .select(
+      `id,
+      tanggal_kembali,
+      status,
+      kondisi_barang,
+      siapa:siapa_id (nama),
+      peminjaman:peminjaman_id (
+        id,
+        nama,
+        alat:alat_id (nama)
+      )`
+    )
+    .order("tanggal_kembali", { ascending: false })
+    .ilike("peminjaman.nama", `%${keyword.value}%`); // Search berdasarkan nama peminjaman
 
   if (error) {
     console.error("Error fetching pengembalian:", error);
@@ -90,6 +109,7 @@ const getpengembalian = async () => {
   }
 };
 
+// Fungsi untuk menghitung total pengembalian
 const getTotalPengembalian = async () => {
   const { count, error } = await supabase
     .from("pengembalian")
@@ -98,17 +118,49 @@ const getTotalPengembalian = async () => {
   if (error) {
     console.error("Error fetching total pengembalian:", error);
   } else {
-    TotalPengembalian.value = count || 0;
+    totalPengembalian.value = count || 0;
   }
 };
 
+// Fungsi untuk memperbarui status peminjaman menjadi "Sudah Dikembalikan"
+const updatePeminjamanStatus = async (peminjamanId) => {
+  const { error } = await supabase
+    .from("peminjaman")
+    .update({ status: "Sudah Dikembalikan" })
+    .eq("id", peminjamanId);
+
+  if (error) {
+    console.error("Error updating peminjaman status:", error);
+  } else {
+    console.log("Peminjaman status updated successfully.");
+  }
+};
+
+// Fungsi untuk menyimpan pengembalian
+const savePengembalian = async () => {
+  const { data, error } = await supabase.from("pengembalian").insert([
+    {
+      tanggal_kembali: new Date().toISOString(),
+      kondisi_barang: "", // Atau sesuai dengan inputan kondisi barang
+      peminjaman_id: selectedPeminjamanId.value, // ID peminjaman yang dikembalikan
+      status: "Selesai",
+    },
+  ]);
+
+  if (error) {
+    console.error("Error inserting pengembalian:", error);
+  } else {
+    // Setelah pengembalian berhasil disimpan, perbarui status peminjaman
+    await updatePeminjamanStatus(selectedPeminjamanId.value);
+  }
+};
+
+// Ambil data saat halaman dimuat
 onMounted(() => {
-  getpengembalian();
+  getPengembalian();
   getTotalPengembalian();
 });
 </script>
-
-
 <style scoped>
 /* Global Styles */
 body {
@@ -119,13 +171,13 @@ body {
 }
 
 .header-title {
-font-size: 28px;
-font-weight: bold;
-color: #ffd700;
-text-align: center; /* Membuat teks berada di tengah */
-margin: 20px auto;  /* Memastikan teks tetap terpusat */
-display: flex;
-justify-content: center;
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffd700;
+  text-align: center; /* Membuat teks berada di tengah */
+  margin: 20px auto; /* Memastikan teks tetap terpusat */
+  display: flex;
+  justify-content: center;
 }
 
 /* Navbar Styles */
@@ -187,8 +239,8 @@ justify-content: center;
 }
 
 .data-info {
-margin-top: 1rem;
-margin-bottom: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 /* Search Bar Styles */
@@ -224,46 +276,37 @@ margin-bottom: 1rem;
 
 /* Table Styles */
 .table-container {
-  width: 100%;
-  overflow-x: auto;
-  margin-top: 10px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.3);
+  margin-top: 10px;
 }
 
-th, td {
-  padding: 12px;
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 10px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
 }
 
-th {
+table th {
   background-color: #005696;
   color: white;
 }
 
-/* Status Styles */
-.status {
-  padding: 6px;
-  border-radius: 6px;
+table tr:nth-child(even) {
+  background-color: #f4f4f4;
+}
+
+.status-selesai {
+  color: #2d6a4f; /* Hijau tua untuk status selesai */
   font-weight: bold;
-  text-align: center;
-}
-
-.status-dipinjam {
-color: #38a169;
-font-weight: bold;
-}
-
-.status-kembali {
-  background-color: #73a839;
-  color: white;
 }
 
 /* Button Styles */
@@ -279,7 +322,7 @@ font-weight: bold;
   border: none;
   transition: background 0.3s;
 }
-a{
+a {
   text-decoration: none;
   color: black;
 }
