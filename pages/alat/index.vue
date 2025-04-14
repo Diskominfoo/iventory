@@ -14,10 +14,10 @@
             <!-- Nama Alat (Dropdown dari Supabase) -->
             <div class="form-group">
               <label for="name">Nama Alat</label>
-              <select v-model="form.name" id="name" required>
+              <select v-model="form.nama" id="name" required>
                 <option value="">-- Pilih --</option>
                 <option v-for="alat in alatList" :key="alat.id" :value="alat.name">
-                  {{ alat.name }}
+                  {{ alat.nama }}
                 </option>
               </select>
             </div>
