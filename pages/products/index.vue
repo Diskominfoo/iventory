@@ -53,7 +53,7 @@
               <tr v-for="(product, i) in products" :key="product.id">
                 <td>{{ i + 1 }}.</td>
                 <td>{{ product.tanggal }}</td>
-                <td>{{ product.name }}</td>
+                <td>{{ product.nama }}</td>
                 <td>{{ product.kategori }}</td>
                 <td>{{ product.description }}</td>
                 <td>{{ product.kondisi }}</td>
@@ -98,7 +98,7 @@ const getProducts = async () => {
   const { data, error } = await supabase
     .from("products")
     .select("*")
-    .ilike("name", `%${keyword.value}%`);
+    .ilike("nama", `%${keyword.value}%`);
 
   if (error) {
     console.error("Error fetching products:", error);
@@ -125,19 +125,33 @@ const getTotalProducts = async () => {
 
 // Navigasi ke halaman edit
 const editProduct = (product) => {
-  router.push(`/products/${product.id}`);
+  router.push(`/products/${product.id}`).then(() => {
+    getProducts(); // Memastikan data terbaru ditampilkan setelah navigasi
+  });
 };
 
 // Menghapus produk
 const deleteProduct = async (id) => {
+  // console.log("ID yang diklik untuk dihapus:", id); // cek dulu id-nya
+
+  if (!id) {
+    alert("ID produk tidak ditemukan!");
+    return;
+  }
+
   if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+    console.log(id);
+
     const { error } = await supabase.from("products").delete().eq("id", id);
 
     if (error) {
-      console.error("Error deleting product:", error);
+      console.error("Gagal menghapus produk:", error);
       alert("Gagal menghapus produk");
     } else {
-      getProducts();
+      alert("Produk berhasil dihapus");
+
+      // Mengambil data produk setelah penghapusan untuk memastikan halaman terupdate
+      await getProducts(); // Memastikan data terbaru ditampilkan
     }
   }
 };

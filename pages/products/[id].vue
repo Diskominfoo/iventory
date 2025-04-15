@@ -3,24 +3,30 @@
     <h1>Edit Produk</h1>
 
     <!-- Form Edit Produk -->
-    <form @submit.prevent="updateProduct">
+    <form @submit.prevent="updateProducts">
       <label>Nama Produk:</label>
-      <input v-model="product.name" type="text" required />
+      <input v-model="products.nama" type="text" disabled />
 
       <label>Kategori:</label>
-      <input v-model="product.kategori" type="text" required />
+      <select v-model="products.kategori">
+        <option v-for="k in kategori" :key="k.id" :value="k.name">{{ k.name }}</option>
+      </select>
+      <!-- <input v-model="products.kategori" type="text" required /> -->
 
       <label>Deskripsi:</label>
-      <textarea v-model="product.description" required></textarea>
+      <select v-model="products.description">
+        <option v-for="d in deskripsi" :key="d.id" :value="d.name">{{ d.name }}</option>
+      </select>
+      <!-- <textarea v-model="products.description" required></textarea> -->
 
       <label>Kondisi Alat:</label>
-      <select v-model="product.kondisi">
+      <select v-model="products.kondisi">
         <option>Baik</option>
         <option>Rusak</option>
       </select>
 
       <label>Jumlah:</label>
-      <input v-model="product.jumlah" type="number" required />
+      <input v-model="products.jumlah" type="number" min="1" required />
 
       <!-- Tombol Simpan -->
       <button type="submit" class="save-btn">Simpan</button>
@@ -39,11 +45,29 @@ definePageMeta({
 const route = useRoute();
 const router = useRouter();
 const supabase = useSupabaseClient();
+const kategori = ref([]);
+const deskripsi = ref([]);
+
+async function getKategori() {
+  const { data, error } = await supabase.from("kategori").select("*");
+  if (error) {
+    console.error("Error fetching categories:", error);
+  }
+  if (data) kategori.value = data;
+}
+
+async function getDeskripsi() {
+  const { data, error } = await supabase.from("description").select("*");
+  if (error) {
+    console.error("Error fetching description:", error);
+  }
+  if (data) deskripsi.value = data;
+}
 
 // Default nilai produk agar tidak undefined
-const product = ref({
+const products = ref({
   id: null,
-  name: "",
+  // nama: "",
   kategori: "",
   description: "",
   kondisi: "Baik",
@@ -51,7 +75,7 @@ const product = ref({
 });
 
 // Mengambil data produk berdasarkan ID
-const getProduct = async () => {
+const getProducts = async () => {
   try {
     const { data, error } = await supabase
       .from("products")
@@ -65,15 +89,15 @@ const getProduct = async () => {
       return;
     }
 
-    product.value = data;
+    products.value = data;
   } catch (err) {
     console.error("Unexpected error:", err);
   }
 };
 
 // Fungsi untuk mengupdate produk
-const updateProduct = async () => {
-  if (!product.value.id) {
+const updateProducts = async () => {
+  if (!products.value.id) {
     console.error("ID produk tidak ditemukan.");
     alert("Gagal mengupdate produk: ID tidak valid.");
     return;
@@ -83,13 +107,13 @@ const updateProduct = async () => {
     const { error } = await supabase
       .from("products")
       .update({
-        name: product.value.name,
-        kategori: product.value.kategori,
-        description: product.value.description,
-        kondisi: product.value.kondisi,
-        jumlah: product.value.jumlah,
+        nama: products.value.nama,
+        kategori: products.value.kategori,
+        description: products.value.description,
+        kondisi: products.value.kondisi,
+        jumlah: products.value.jumlah,
       })
-      .eq("id", product.value.id);
+      .eq("id", products.value.id);
 
     if (error) {
       console.error("Error updating product:", error);
@@ -98,21 +122,20 @@ const updateProduct = async () => {
     }
 
     alert("Produk berhasil diperbarui!");
-    router.push("/products"); // Redirect ke halaman daftar produk
+    router.push("/products");
   } catch (err) {
     console.error("Unexpected error:", err);
     alert("Terjadi kesalahan, silakan coba lagi.");
   }
 };
-
-// Memuat data saat halaman dibuka
 onMounted(() => {
-  getProduct();
+  getProducts();
+  getKategori();
+  getDeskripsi();
 });
 </script>
 
 <style scoped>
-/* Styling Halaman Edit */
 .edit-container {
   max-width: 500px;
   margin: 50px auto;

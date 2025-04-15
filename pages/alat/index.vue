@@ -16,7 +16,7 @@
               <label for="name">Nama Alat</label>
               <select v-model="form.nama" id="name" required>
                 <option value="">-- Pilih --</option>
-                <option v-for="alat in alatList" :key="alat.id" :value="alat.name">
+                <option v-for="alat in alatList" :key="alat.id" :value="alat.nama">
                   {{ alat.nama }}
                 </option>
               </select>
@@ -112,7 +112,7 @@ const router = useRouter();
 
 // Form data
 const form = ref({
-  name: "",
+  nama: "",
   kategori: "",
   description: "",
   kondisi: "",
@@ -132,7 +132,7 @@ const showNotification = (message, type = "success") => {
   notif.value = { show: true, message, type };
   setTimeout(() => {
     notif.value.show = false;
-  }, 3000);
+  }, 1000);
 };
 
 // Fetch Data untuk Dropdown
@@ -163,9 +163,9 @@ const kirimData = async () => {
 
     const tanggalHariIni = new Date().toISOString().split("T")[0];
 
-    const { error } = await supabase.from("products").insert([
+    const { data, error } = await supabase.from("products").insert([
       {
-        name: form.value.name,
+        nama: form.value.nama,
         kategori: form.value.kategori,
         description: form.value.description,
         kondisi: form.value.kondisi,
@@ -178,7 +178,11 @@ const kirimData = async () => {
 
     if (error) {
       console.error("Error inserting data:", error);
-      showNotification("Terjadi kesalahan saat menambah alat", "error");
+      if (error.code === "23505") {
+        showNotification("Data sudah ada (duplicate entry)", "error");
+      } else {
+        showNotification("Terjadi kesalahan saat menambah alat", "error");
+      }
       return;
     }
 
@@ -186,7 +190,7 @@ const kirimData = async () => {
 
     setTimeout(() => {
       router.push("/products");
-    }, 1500);
+    }, 1000);
   } catch (err) {
     console.error("Unexpected error:", err);
     showNotification("Terjadi kesalahan yang tidak terduga", "error");
@@ -284,19 +288,13 @@ const kirimData = async () => {
   background-color: #ffd700;
   color: black;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s;
-  min-width: 150px;
-}
-
-.form-group button:hover {
-  background-color: #ffc107;
 }
 
 .form-group button:disabled {
-  background-color: #ddd;
+  background-color: #ccc;
   cursor: not-allowed;
 }
 </style>
